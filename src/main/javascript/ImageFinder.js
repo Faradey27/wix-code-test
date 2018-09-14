@@ -1,25 +1,25 @@
 (() => {
-  class ImageFinder {
-    search(query) {
-      return {
-        query: 'demo',
-        images: [
-          {
-            id:'1',
-            url:'http://image.shutterstock.com/display_pic_with_logo/347836/99127196/stock-photo-demo-icon-99127196.jpg',
-            title:'demo image 1'
-          },
-          {
-            id:'2',
-            url:'http://t2.ftcdn.net/jpg/00/30/42/21/400_F_30422159_lzSKGlGNX1YcKGuIFDiEyZbmCF3hacIB.jpg',
-            title:'demo image 2'
-          }
-        ]
-      };
-    }
-  }
+    class ImageFinder {
 
-  window.classes = window.classes || {};
-  window.classes.ImageFinder = ImageFinder;
+        constructor(modules) {
+            this._modules = modules || {};
+        }
+
+        getModules() {
+            return this._modules;
+        }
+
+        register(moduleId, moduleInstance) {
+            this._modules[moduleId] = moduleInstance;
+        }
+
+        search(clientMarker, query, moduleId) {
+            if (!this._modules[moduleId]) throw new Error("requested module `" + moduleId + "` not found");
+            return this._modules[moduleId].search(clientMarker, query);
+        }
+    }
+
+    window.classes = window.classes || {};
+    window.classes.ImageFinder = ImageFinder;
 })();
 
