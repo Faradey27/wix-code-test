@@ -20,18 +20,27 @@
     <link rel="stylesheet" href="../css/style.css">
 
     <!-- test classes -->
-    <script src="../resources/static-images-db.js"></script>
     <script src="../javascript/ImageFinder.js"></script>
     <script src="../javascript/Gallery.js"></script>
 
+    <!-- modules -->
+    <script src="../javascript/search-modules/static.js"></script>
+    <script src="../javascript/search-modules/flickr.js"></script>
+
     <!-- initiate world -->
     <script>
-        window.imageFinder = new window.classes.ImageFinder();
+        window.imageFinder = new window.classes.ImageFinder({
+          'static': new window.classes.StaticModule(),
+          'flickr': new window.classes.FlickrModule('b394136d5dde8d9d0d4f8fc6685386e2'),
+        });
 
         // Create a gallery when page is loaded
         window.onload = () => {
           new window.classes.Gallery(window.imageFinder)
-            .addToNode(document.body);
+            .addToNode(document.getElementById('first-gallery'));
+
+          new window.classes.Gallery(window.imageFinder)
+            .addToNode(document.getElementById('second-gallery'));
 
           initiateTest();
         };
@@ -39,6 +48,7 @@
 
 </head>
 <body>
-
+    <div id="first-gallery" />
+    <div id="second-gallery" />
 </body>
 </html>

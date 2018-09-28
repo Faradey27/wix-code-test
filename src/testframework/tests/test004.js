@@ -18,7 +18,7 @@ describe('Task 4 - Multiple requests', function(){
 
             waitsFor(function(){
                 return gallery._onSearchResultReady.callCount > 0 && gallery2._onSearchResultReady.callCount > 0;
-            }, 'imageFinder to return results', 1000);
+            }, 'imageFinder to return results', 10000);
 
             runs(function(){
                 var results1 = gallery._onSearchResultReady.calls[0].args[0];

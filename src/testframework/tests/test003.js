@@ -20,12 +20,13 @@ describe('Task 3 - Async Flickr Module', function(){
 
             runs(function(){
                 var results = gallery._onSearchResultReady.calls[0].args[0];
-                
+
                 expect(results.query).toBe('dog');
 
                 expect(results.images instanceof Array, 'check that results.images is an Array').toBeTruthy();
 
-                expect(results.images.length).toBe(100);
+                expect(results.images.length).toBeGreaterThan(0);
+                expect(results.images.length).not.toBeGreaterThan(100);
 
                 // ToDo: add more specific tests
             });

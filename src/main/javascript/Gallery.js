@@ -24,9 +24,18 @@
       this._searchBtnNode = createNode('button', 'search');
       this._searchBtnNode.innerText = 'Search';
 
+      this._selectModuleNode = createNode('select');
+      Object.entries(this._imageFinder.modules).forEach(([key, module])  => {
+        const selectOption = createNode('option');
+        selectOption.value = key;
+        selectOption.innerText = module.name;
+        this._selectModuleNode.appendChild(selectOption);
+      });
+
       this._viewNode.appendChild(this._controlsNode);
       this._controlsNode.appendChild(this._queryInputNode);
       this._controlsNode.appendChild(this._searchBtnNode);
+      this._controlsNode.appendChild(this._selectModuleNode);
       this._viewNode.appendChild(this._resultsNode);
     }
 
@@ -35,7 +44,10 @@
     }
 
     _onSearchButtonClick() {
-      this.doSearch(this._queryInputNode.value);
+      const text = this._queryInputNode.value;
+      const module = this._selectModuleNode.options[this._selectModuleNode.selectedIndex].value;
+
+      this.doSearch(text, module);
     };
 
     _onSearchResultReady({ images }) {
@@ -50,9 +62,24 @@
       this._resultsNode.appendChild(fragmentWithResults);
     }
 
-    doSearch(query) {
-      const searchResults = this._imageFinder.search(query);
-      this._onSearchResultReady(searchResults);
+    doSearch(query, moduleId) {
+      if (this._searchPromise) {
+        this._searchPromise.cancel();
+      }
+
+      this._searchPromise = (() => {
+        let canceled = false;
+
+        return {
+          promise: Promise.resolve(this._imageFinder.search(query, moduleId))
+            .then(searchResults => {
+              if (!canceled) {
+                this._onSearchResultReady(searchResults);
+              }
+            }),
+          cancel: () => canceled = true
+      }
+      })();
     }
 
     addToNode(node) {
