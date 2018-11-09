@@ -50,9 +50,12 @@
       this._resultsNode.appendChild(fragmentWithResults);
     }
 
-    doSearch(query) {
-      const searchResults = this._imageFinder.search(query);
-      this._onSearchResultReady(searchResults);
+    doSearch(query, moduleId = 'flickr') {
+      const searchResults = this._imageFinder
+        .module(moduleId)
+        .search(query);
+
+      searchResults.then((resp) => this._onSearchResultReady(resp))
     }
 
     addToNode(node) {

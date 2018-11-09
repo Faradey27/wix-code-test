@@ -1,5 +1,5 @@
 describe('Task 5 - Nuts & Bolts', function(){
-    
+
     var taskDesc = '<p>Now that <code>search()</code> return results asynchronously,' +
             ' it might cause unwanted old results to be returned before or <strong>after</strong> newer queries.' +
             'Change <code>search()</code> so that it will cancel previous searches when a new query is executed.</p>';
@@ -22,9 +22,13 @@ describe('Task 5 - Nuts & Bolts', function(){
                 var results = gallery._onSearchResultReady.calls[0].args[0];
 
                 expect(gallery._onSearchResultReady.callCount).toBe(1);
-                
+
+                console.log('callCount', gallery._onSearchResultReady.callCount);
+
                 expect(results.query, 'check result query').toBe('dogs');
-                
+
+                console.log('results.query', results.query);
+
             });
         });
     });

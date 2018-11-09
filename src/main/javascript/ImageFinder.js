@@ -1,25 +1,32 @@
 (() => {
   class ImageFinder {
-    search(query) {
-      return {
-        query: 'demo',
-        images: [
-          {
-            id:'1',
-            url:'http://image.shutterstock.com/display_pic_with_logo/347836/99127196/stock-photo-demo-icon-99127196.jpg',
-            title:'demo image 1'
-          },
-          {
-            id:'2',
-            url:'http://t2.ftcdn.net/jpg/00/30/42/21/400_F_30422159_lzSKGlGNX1YcKGuIFDiEyZbmCF3hacIB.jpg',
-            title:'demo image 2'
-          }
-        ]
-      };
+    module(moduleId) {
+      const Module = window.modules && window.modules.find(module => module._name === moduleId)
+
+      if(Module) {
+        return new Module()
+      } else {
+        throw new Error(`Module ${moduleId} not found`)
+      }
+    }
+
+    async search(query) {
+      return this.defaultSearch(query)
+    }
+
+    defaultSearch(query) {
+      if(!query.length) {
+        return { query, images: [] }
+      }
+
+      const images = window.data.staticImagesData
+        .filter(img => img.title.indexOf(query) !== -1)
+        .map(helpers.pluck('id', 'url', 'title'))
+
+      return { query, images };
     }
   }
 
   window.classes = window.classes || {};
   window.classes.ImageFinder = ImageFinder;
 })();
-

@@ -1,5 +1,5 @@
 describe('Task 3 - Async Flickr Module', function(){
-    
+
     var taskDesc = '<p>Add a flickr search module to the system using the following credentials:<br/>' +
                    '<code>Flickr API<br/>' +
                    "api_key: 'b394136d5dde8d9d0d4f8fc6685386e2'</code></p>" +
@@ -25,7 +25,7 @@ describe('Task 3 - Async Flickr Module', function(){
 
                 expect(results.images instanceof Array, 'check that results.images is an Array').toBeTruthy();
 
-                expect(results.images.length).toBe(100);
+                expect(results.images.length).not.toBeLessThan(90);
 
                 // ToDo: add more specific tests
             });
