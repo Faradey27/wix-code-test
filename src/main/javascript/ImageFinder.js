@@ -1,25 +1,28 @@
-(() => {
+((staticImagesData, StaticSearchModule) => {
+
   class ImageFinder {
-    search(query) {
-      return {
-        query: 'demo',
-        images: [
-          {
-            id:'1',
-            url:'http://image.shutterstock.com/display_pic_with_logo/347836/99127196/stock-photo-demo-icon-99127196.jpg',
-            title:'demo image 1'
-          },
-          {
-            id:'2',
-            url:'http://t2.ftcdn.net/jpg/00/30/42/21/400_F_30422159_lzSKGlGNX1YcKGuIFDiEyZbmCF3hacIB.jpg',
-            title:'demo image 2'
-          }
-        ]
+    constructor() {
+      this.searchModules = {
+        default: new StaticSearchModule(),
       };
+    }
+
+    addSearchModule(key, mudule) {
+      this.searchModules[key] = mudule;
+    }
+
+    search(query, searchModuleId) {
+      if (searchModuleId && this.searchModules[searchModuleId] === undefined) {
+        throw new Error(`Unknown searchModuleId: ${searchModuleId}`);
+      }
+
+      const searchModule = searchModuleId ? this.searchModules[searchModuleId] : this.searchModules.default;
+
+      return searchModule.search(query);
     }
   }
 
   window.classes = window.classes || {};
   window.classes.ImageFinder = ImageFinder;
-})();
+})(window.data.staticImagesData, window.classes.StaticSearchModule);
 

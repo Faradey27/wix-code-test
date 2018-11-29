@@ -50,9 +50,17 @@
       this._resultsNode.appendChild(fragmentWithResults);
     }
 
-    doSearch(query) {
-      const searchResults = this._imageFinder.search(query);
-      this._onSearchResultReady(searchResults);
+    doSearch(query, moduleId) {
+      const searchResults = this._imageFinder.search(query, moduleId);
+
+      if (searchResults.then && typeof searchResults.then === 'function') {
+        searchResults
+          .then(results => {
+            this._onSearchResultReady(results);
+          });
+      } else {
+        this._onSearchResultReady(searchResults);
+      }
     }
 
     addToNode(node) {

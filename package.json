@@ -1,0 +1,17 @@
+{
+  "name": "js-interview-test",
+  "version": "1.0.0",
+  "description": "Dadichin test",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "echo \"Go to http://127.0.0.1:8080/src/main/html/test.html\" && static ./ "
+  },
+  "author": "Yuriy Dadichin",
+  "license": "ISC",
+  "dependencies": {
+    "node-static": "^0.7.11",
+    "eslint": "~4.9.0",
+    "eslint-config-wix": "latest"
+  }
+}
