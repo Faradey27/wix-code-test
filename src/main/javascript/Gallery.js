@@ -11,6 +11,8 @@
 
   class Gallery {
     constructor(imageFinder) {
+      this._requestNames = {};
+      this._options = [];
       this._imageFinder = imageFinder;
       this._createInterface();
       this._setFunctionality();
@@ -21,21 +23,30 @@
       this._resultsNode = createNode('div', 'galleryItems');
       this._controlsNode = createNode('div', 'galleryControls');
       this._queryInputNode = createNode('input');
+      this._selectModuleNode = createNode('select');
       this._searchBtnNode = createNode('button', 'search');
       this._searchBtnNode.innerText = 'Search';
 
       this._viewNode.appendChild(this._controlsNode);
       this._controlsNode.appendChild(this._queryInputNode);
+      this._controlsNode.appendChild(this._selectModuleNode);
       this._controlsNode.appendChild(this._searchBtnNode);
       this._viewNode.appendChild(this._resultsNode);
     }
 
     _setFunctionality() {
       this._searchBtnNode.addEventListener('click', () => this._onSearchButtonClick());
+      const selectNode = this._selectModuleNode;
+      Object.keys(window.ImageFinderModules).forEach(key => {
+        const option = createNode('option');
+        option.innerText = key;
+        selectNode.appendChild(option);
+        this._options.push(key);
+      })
     }
 
     _onSearchButtonClick() {
-      this.doSearch(this._queryInputNode.value);
+      this.doSearch(this._queryInputNode.value, this._options[this._selectModuleNode.selectedIndex]);
     };
 
     _onSearchResultReady({ images }) {
@@ -50,9 +61,17 @@
       this._resultsNode.appendChild(fragmentWithResults);
     }
 
-    doSearch(query) {
-      const searchResults = this._imageFinder.search(query);
-      this._onSearchResultReady(searchResults);
+    doSearch(query, module) {
+      this._requestNames[module] = this._requestNames[module] || 0;
+      const requestId = ++this._requestNames[module];
+
+      this._imageFinder
+        .search(query, module)
+        .then((...args) => {
+          if (requestId === this._requestNames[module]) {
+            this._onSearchResultReady(...args)
+          }
+        });
     }
 
     addToNode(node) {

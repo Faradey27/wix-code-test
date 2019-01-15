@@ -1,25 +1,29 @@
 (() => {
+
   class ImageFinder {
-    search(query) {
-      return {
-        query: 'demo',
-        images: [
-          {
-            id:'1',
-            url:'http://image.shutterstock.com/display_pic_with_logo/347836/99127196/stock-photo-demo-icon-99127196.jpg',
-            title:'demo image 1'
-          },
-          {
-            id:'2',
-            url:'http://t2.ftcdn.net/jpg/00/30/42/21/400_F_30422159_lzSKGlGNX1YcKGuIFDiEyZbmCF3hacIB.jpg',
-            title:'demo image 2'
+
+    search(query, module) {
+      // defines here to get possibility import modules after ImageFinder
+      const modules = window.ImageFinderModules;
+
+      if (modules.hasOwnProperty(module)) {
+
+        return new Promise(resolve => {
+          const result = modules[module](query);
+
+          if (result instanceof Promise) {
+            return resolve(result);
+          } else {
+            resolve(result);
           }
-        ]
-      };
+        });
+
+      } else {
+        throw new Error(`ImageFinder.search() : There is no "${module}" module.`)
+      }
     }
   }
 
   window.classes = window.classes || {};
   window.classes.ImageFinder = ImageFinder;
 })();
-
