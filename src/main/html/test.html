@@ -21,6 +21,7 @@
 
     <!-- test classes -->
     <script src="../resources/static-images-db.js"></script>
+    <script src="../javascript/SearchModuleFactory.js"></script>
     <script src="../javascript/ImageFinder.js"></script>
     <script src="../javascript/Gallery.js"></script>
 
@@ -30,8 +31,10 @@
 
         // Create a gallery when page is loaded
         window.onload = () => {
-          new window.classes.Gallery(window.imageFinder)
-            .addToNode(document.body);
+          const g1 = new window.classes.Gallery(window.imageFinder);
+          g1.addToNode(document.body);
+          const g2 = new window.classes.Gallery(window.imageFinder);
+          g2.addToNode(document.body);
 
           initiateTest();
         };

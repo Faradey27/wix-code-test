@@ -1,25 +1,44 @@
 (() => {
-  class ImageFinder {
-    search(query) {
-      return {
-        query: 'demo',
-        images: [
-          {
-            id:'1',
-            url:'http://image.shutterstock.com/display_pic_with_logo/347836/99127196/stock-photo-demo-icon-99127196.jpg',
-            title:'demo image 1'
-          },
-          {
-            id:'2',
-            url:'http://t2.ftcdn.net/jpg/00/30/42/21/400_F_30422159_lzSKGlGNX1YcKGuIFDiEyZbmCF3hacIB.jpg',
-            title:'demo image 2'
-          }
-        ]
-      };
-    }
-  }
+    class ImageFinder {
+        constructor() {
+            this.knownGalerries = [];
+        }
 
-  window.classes = window.classes || {};
-  window.classes.ImageFinder = ImageFinder;
+        search(query) {
+            return this.searchModule.search(query);
+        }
+
+        use(gallery, moduleId) {
+            let knownGallery = this.knownGalerries.find((obj) => {
+                return obj.gallery === gallery;
+            });
+
+            if (!knownGallery) {
+                knownGallery = {
+                    gallery,
+                    searchModules: []
+                };
+                this.knownGalerries.push(knownGallery);
+            }
+
+            let searchModule = knownGallery.searchModules.find((obj) => obj.moduleId === moduleId);
+            if (!searchModule) {
+                searchModule = {
+                    moduleId,
+                    module: window.classes.SearchModuleFactory.create(moduleId)
+                };
+                if (!searchModule.module) {
+                    throw new Error('unknown module id');
+                }
+                knownGallery.searchModules.push(searchModule)
+            }
+
+            this.searchModule = searchModule.module;
+            return this;
+        }
+    }
+
+    window.classes = window.classes || {};
+    window.classes.ImageFinder = ImageFinder;
 })();
 

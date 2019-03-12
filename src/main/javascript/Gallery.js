@@ -12,6 +12,7 @@
   class Gallery {
     constructor(imageFinder) {
       this._imageFinder = imageFinder;
+      this._onSearchResultReady = this._onSearchResultReady.bind(this);
       this._createInterface();
       this._setFunctionality();
     }
@@ -50,9 +51,8 @@
       this._resultsNode.appendChild(fragmentWithResults);
     }
 
-    doSearch(query) {
-      const searchResults = this._imageFinder.search(query);
-      this._onSearchResultReady(searchResults);
+    doSearch(query, moduleId = 'static') {
+      this._imageFinder.use(this, moduleId).search(query).then(this._onSearchResultReady);
     }
 
     addToNode(node) {
