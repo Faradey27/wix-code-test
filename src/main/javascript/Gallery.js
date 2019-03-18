@@ -50,8 +50,8 @@
       this._resultsNode.appendChild(fragmentWithResults);
     }
 
-    doSearch(query) {
-      const searchResults = this._imageFinder.search(query);
+    doSearch(query, moduleId) {
+      const searchResults = this._imageFinder.search(query, moduleId);
       this._onSearchResultReady(searchResults);
     }
 
