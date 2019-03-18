@@ -7,17 +7,16 @@ describe('Task 3 - Async Flickr Module', function(){
                    '<li><strong>Bonus</strong> - Add a drop down menu in gallery to select a search module (static / flickr).</li></p>';
 
     describe(taskDesc, function(){
-
         it('async flickr result test', function(){
             var gallery = new window.classes.Gallery(window.imageFinder);
             spyOn(gallery, '_onSearchResultReady');
-
+            
             runs(function(){
                 gallery.doSearch('dog', 'flickr');
             });
-
+            
             waitsFor(function(){ return gallery._onSearchResultReady.callCount > 0; }, 'imageFinder to return results', 1000);
-
+            
             runs(function(){
                 var results = gallery._onSearchResultReady.calls[0].args[0];
                 

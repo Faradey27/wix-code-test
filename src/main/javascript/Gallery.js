@@ -21,11 +21,24 @@
       this._resultsNode = createNode('div', 'galleryItems');
       this._controlsNode = createNode('div', 'galleryControls');
       this._queryInputNode = createNode('input');
+      this._querySelectNode = createNode('select');
+      
+      let optionFlickr = createNode('option');
+      optionFlickr.value = 'flickr';
+      optionFlickr.text = 'flickr';
+      this._querySelectNode.appendChild(optionFlickr);
+
+      let optionStatic = createNode('option');
+      optionStatic.value = 'static';
+      optionStatic.text = 'static';
+      this._querySelectNode.appendChild(optionStatic);
+
       this._searchBtnNode = createNode('button', 'search');
       this._searchBtnNode.innerText = 'Search';
 
       this._viewNode.appendChild(this._controlsNode);
       this._controlsNode.appendChild(this._queryInputNode);
+      this._controlsNode.appendChild(this._querySelectNode);
       this._controlsNode.appendChild(this._searchBtnNode);
       this._viewNode.appendChild(this._resultsNode);
     }
@@ -35,7 +48,7 @@
     }
 
     _onSearchButtonClick() {
-      this.doSearch(this._queryInputNode.value);
+      this.doSearch(this._queryInputNode.value, this._querySelectNode.value);
     };
 
     _onSearchResultReady({ images }) {
@@ -50,9 +63,9 @@
       this._resultsNode.appendChild(fragmentWithResults);
     }
 
-    doSearch(query) {
-      const searchResults = this._imageFinder.search(query);
-      this._onSearchResultReady(searchResults);
+    async doSearch(query, moduleId) {
+      const result = await this._imageFinder.search(query, moduleId);
+      return this._onSearchResultReady(result);
     }
 
     addToNode(node) {
