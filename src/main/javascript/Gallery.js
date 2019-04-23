@@ -11,6 +11,7 @@
 
   class Gallery {
     constructor(imageFinder) {
+      this.id = Date.now().toString();
       this._imageFinder = imageFinder;
       this._createInterface();
       this._setFunctionality();
@@ -50,9 +51,16 @@
       this._resultsNode.appendChild(fragmentWithResults);
     }
 
-    doSearch(query) {
-      const searchResults = this._imageFinder.search(query);
-      this._onSearchResultReady(searchResults);
+    doSearch(query, moduleId) {
+      if (!window.modules[moduleId]) {
+        throw new Error('Unknown module id')
+      }
+
+      this._imageFinder.search(query, moduleId, this.id).then(searchResults => {
+        this._onSearchResultReady(searchResults);
+      }).catch(e => {
+        console.log(e);
+      });
     }
 
     addToNode(node) {
