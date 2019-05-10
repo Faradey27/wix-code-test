@@ -9,7 +9,7 @@ describe('Task 3 - Async Flickr Module', function(){
     describe(taskDesc, function(){
 
         it('async flickr result test', function(){
-            var gallery = new window.classes.Gallery(window.imageFinder);
+            var gallery = new window.classes.Gallery(window.imageFinder, 'test');
             spyOn(gallery, '_onSearchResultReady');
 
             runs(function(){
