@@ -9,6 +9,22 @@
     return node;
   };
 
+  const createDropDownWithOptions = (options) => {
+    const select = createNode('select');
+
+    options.forEach((optionValue) => {
+      const option = createNode('option');
+
+      option.innerText = optionValue;
+
+      option.setAttribute('value', optionValue)
+
+      select.appendChild(option);
+    });
+
+    return select;
+  }
+
   class Gallery {
     constructor(imageFinder) {
       this._imageFinder = imageFinder;
@@ -21,11 +37,13 @@
       this._resultsNode = createNode('div', 'galleryItems');
       this._controlsNode = createNode('div', 'galleryControls');
       this._queryInputNode = createNode('input');
+      this._searchModuleInputNode = createDropDownWithOptions(Object.keys(window.search));
       this._searchBtnNode = createNode('button', 'search');
       this._searchBtnNode.innerText = 'Search';
 
       this._viewNode.appendChild(this._controlsNode);
       this._controlsNode.appendChild(this._queryInputNode);
+      this._controlsNode.appendChild(this._searchModuleInputNode);
       this._controlsNode.appendChild(this._searchBtnNode);
       this._viewNode.appendChild(this._resultsNode);
     }
@@ -35,7 +53,7 @@
     }
 
     _onSearchButtonClick() {
-      this.doSearch(this._queryInputNode.value);
+      this.doSearch(this._queryInputNode.value, this._searchModuleInputNode.value);
     };
 
     _onSearchResultReady({ images }) {
@@ -50,9 +68,13 @@
       this._resultsNode.appendChild(fragmentWithResults);
     }
 
-    doSearch(query) {
-      const searchResults = this._imageFinder.search(query);
-      this._onSearchResultReady(searchResults);
+    doSearch(query, moduleId) {
+      const deferSearch = this._imageFinder.search(query, moduleId);
+
+        deferSearch.then((searchResults) => {
+            this._onSearchResultReady(searchResults);
+        })
+
     }
 
     addToNode(node) {
